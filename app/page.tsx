@@ -9,7 +9,8 @@ import { FilterSection, type Filters } from "@/components/FilterSection";
 import { PerfumeCard } from "@/components/PerfumeCard";
 import { RecommendationQuiz } from "@/components/RecommendationQuiz";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { perfumes } from "@/data/perfumes";
+import { CartDrawer, type CartItem } from "@/components/CartDrawer";
+import { perfumes, type Perfume, type PerfumeSize } from "@/data/perfumes";
 
 const initialFilters: Filters = {
   query: "",
@@ -21,6 +22,8 @@ const initialFilters: Filters = {
 
 export default function Home() {
   const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const filteredPerfumes = useMemo(() => {
     const query = filters.query.trim().toLowerCase();
@@ -35,6 +38,48 @@ export default function Home() {
       return searchMatch && genderMatch && occasionMatch && seasonMatch && accordMatch;
     });
   }, [filters]);
+
+  const addToCart = (perfume: Perfume, size: PerfumeSize) => {
+    const id = `${perfume.id}-${size}`;
+
+    setCartItems((current) => {
+      const existing = current.find((item) => item.id === id);
+
+      if (existing) {
+        return current.map((item) => (item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
+      }
+
+      return [
+        ...current,
+        {
+          id,
+          perfumeId: perfume.id,
+          brand: perfume.brand,
+          name: perfume.name,
+          size,
+          price: perfume.prices[size],
+          quantity: 1
+        }
+      ];
+    });
+    setCartOpen(true);
+  };
+
+  const incrementItem = (id: string) => {
+    setCartItems((current) => current.map((item) => (item.id === id ? { ...item, quantity: item.quantity + 1 } : item)));
+  };
+
+  const decrementItem = (id: string) => {
+    setCartItems((current) =>
+      current
+        .map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item))
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  const removeItem = (id: string) => {
+    setCartItems((current) => current.filter((item) => item.id !== id));
+  };
 
   return (
     <>
@@ -57,7 +102,7 @@ export default function Home() {
             {filteredPerfumes.length ? (
               <motion.div layout className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {filteredPerfumes.map((perfume, index) => (
-                  <PerfumeCard key={perfume.id} perfume={perfume} priority={index < 4} />
+                  <PerfumeCard key={perfume.id} perfume={perfume} priority={index < 4} onAddToCart={addToCart} />
                 ))}
               </motion.div>
             ) : (
@@ -78,6 +123,15 @@ export default function Home() {
       </footer>
 
       <WhatsAppButton />
+      <CartDrawer
+        items={cartItems}
+        open={cartOpen}
+        onOpenChange={setCartOpen}
+        onIncrement={incrementItem}
+        onDecrement={decrementItem}
+        onRemove={removeItem}
+        onClear={() => setCartItems([])}
+      />
     </>
   );
 }

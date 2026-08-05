@@ -27,6 +27,25 @@ export function createWhatsAppLink({
   return `https://wa.me/${normalizeWhatsAppNumber(phone)}?text=${encodeURIComponent(message)}`;
 }
 
+export type WhatsAppCartItem = {
+  brand: string;
+  name: string;
+  size: PerfumeSize;
+  price: number;
+  quantity: number;
+};
+
+export function createCartWhatsAppLink(items: WhatsAppCartItem[], phone = "+59175639631") {
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const lines = items.map(
+    (item, index) =>
+      `${index + 1}. ${item.name} (${item.brand}) - ${item.size} x${item.quantity} - ${item.price * item.quantity} BS`
+  );
+  const message = `Hola Lacio Decants, quiero ordenar estos decants:\n\n${lines.join("\n")}\n\nTotal: ${total} BS.`;
+
+  return `https://wa.me/${normalizeWhatsAppNumber(phone)}?text=${encodeURIComponent(message)}`;
+}
+
 export function createGeneralWhatsAppLink(phone = "+59175639631") {
   const message = "Hola Lacio Decants, quiero consultar disponibilidad y hacer un pedido.";
 

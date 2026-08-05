@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import type { Perfume, PerfumeSize } from "@/data/perfumes";
 import { createWhatsAppLink } from "@/lib/whatsapp";
 import { ProductImage } from "@/components/ProductImage";
@@ -10,12 +10,12 @@ import { ProductImage } from "@/components/ProductImage";
 type PerfumeCardProps = {
   perfume: Perfume;
   priority?: boolean;
+  onAddToCart?: (perfume: Perfume, size: PerfumeSize) => void;
 };
 
-export function PerfumeCard({ perfume, priority = false }: PerfumeCardProps) {
+export function PerfumeCard({ perfume, priority = false, onAddToCart }: PerfumeCardProps) {
   const [size, setSize] = useState<PerfumeSize>("5ml");
   const price = perfume.prices[size];
-  const whatsappHref = useMemo(() => createWhatsAppLink({ perfume, size }), [perfume, size]);
 
   return (
     <motion.article
@@ -41,15 +41,13 @@ export function PerfumeCard({ perfume, priority = false }: PerfumeCardProps) {
 
         <div className="pointer-events-none absolute inset-x-3 bottom-3 grid translate-y-2 grid-cols-2 gap-2 opacity-0 transition duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
           {(["5ml", "10ml"] as PerfumeSize[]).map((option) => (
-            <a
+            <button
               key={option}
-              href={createWhatsAppLink({ perfume, size: option })}
-              target="_blank"
-              rel="noreferrer"
+              onClick={() => onAddToCart?.(perfume, option)}
               className="rounded-full bg-white/95 px-3 py-2 text-center text-xs font-medium text-neutral-950 shadow-sm backdrop-blur transition hover:bg-neutral-950 hover:text-white"
             >
-              {option}
-            </a>
+              Añadir {option}
+            </button>
           ))}
         </div>
       </div>
@@ -82,15 +80,24 @@ export function PerfumeCard({ perfume, priority = false }: PerfumeCardProps) {
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-5">
           <p className="text-xl font-semibold text-neutral-950 sm:text-2xl">{price} BS</p>
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
-          >
-            <MessageCircle className="h-4 w-4" />
-            Pedir
-          </a>
+          {onAddToCart ? (
+            <button
+              onClick={() => onAddToCart(perfume, size)}
+              className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+            >
+              <Plus className="h-4 w-4" />
+              Añadir
+            </button>
+          ) : (
+            <a
+              href={createWhatsAppLink({ perfume, size })}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+            >
+              Pedir
+            </a>
+          )}
         </div>
       </div>
     </motion.article>
