@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #ffffff;
+  color: #0d0d0d;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(197, 160, 89, .28);
+}
+
+.gold-sweep {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.gold-sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: translateX(-105%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  transition: transform .65s ease;
+}
+
+.gold-sweep:hover::before {
+  transform: translateX(105%);
+}
+
+.image-skeleton {
+  background:
+    linear-gradient(100deg, transparent 30%, rgba(255,255,255,.6), transparent 70%),
+    #ece9e3;
+  background-size: 220% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}

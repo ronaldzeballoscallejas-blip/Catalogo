@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+dist/
+
+*.log
+next-dev.log
+next-dev.err.log
+
+.env
+.env*.local
+
+Thumbs.db
+.DS_Store
+
+# Source material kept locally, not needed by the deployed Next.js app.
+*.pdf
