@@ -31,6 +31,7 @@ export function ProductImage({ src, alt, priority = false, className = "" }: Pro
       src={src}
       alt={alt}
       fill
+      unoptimized
       sizes="(min-width: 1280px) 28vw, (min-width: 768px) 42vw, 92vw"
       priority={priority}
       placeholder="blur"

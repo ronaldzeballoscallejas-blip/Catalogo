@@ -36,7 +36,7 @@ export function PerfumeCard({ perfume, priority = false }: PerfumeCardProps) {
         </span>
       </div>
 
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F8F9FA]">
+      <div className="relative aspect-square w-full overflow-hidden bg-[#F8F9FA] sm:aspect-[3/4]">
         <ProductImage src={perfume.image} alt={`${perfume.name} ${perfume.brand}`} priority={priority} />
 
         <div className="pointer-events-none absolute inset-x-3 bottom-3 grid translate-y-2 grid-cols-2 gap-2 opacity-0 transition duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
@@ -55,7 +55,7 @@ export function PerfumeCard({ perfume, priority = false }: PerfumeCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col pt-4">
-        <h3 className="font-display text-3xl font-semibold leading-none text-neutral-950">{perfume.name}</h3>
+        <h3 className="font-display text-2xl font-semibold leading-none text-neutral-950 sm:text-3xl">{perfume.name}</h3>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {perfume.accords.slice(0, 3).map((tag) => (
@@ -81,12 +81,12 @@ export function PerfumeCard({ perfume, priority = false }: PerfumeCardProps) {
         </div>
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-          <p className="text-2xl font-semibold text-neutral-950">{price} BS</p>
+          <p className="text-xl font-semibold text-neutral-950 sm:text-2xl">{price} BS</p>
           <a
             href={whatsappHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+            className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
           >
             <MessageCircle className="h-4 w-4" />
             Pedir
